@@ -1,8 +1,9 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import { useDispatch } from "react-redux";
+import { addContact } from "../../redux/contactsSlice";
 import { useId } from "react";
 import css from "../ContactForm/ContactForm.module.css";
 import * as Yup from "yup";
-import { nanoid } from "nanoid";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string()
@@ -15,7 +16,8 @@ const validationSchema = Yup.object().shape({
     .required("Field cant be empty!"),
 });
 
-export const ContactForm = ({ onAdd }) => {
+export const ContactForm = () => {
+  const dispatch = useDispatch();
   const nameFieldId = useId();
   const numberFieldId = useId();
 
@@ -25,10 +27,7 @@ export const ContactForm = ({ onAdd }) => {
   };
 
   const handleSubmit = (values, actions) => {
-    onAdd({
-      ...values,
-      id: nanoid(3),
-    });
+    dispatch(addContact(values));
     actions.resetForm();
   };
 
@@ -41,20 +40,22 @@ export const ContactForm = ({ onAdd }) => {
       >
         <Form className={css.form}>
           <div className={css.inputContainer}>
-          <label className={css.label} htmlFor={nameFieldId}>
-            Name
-          </label>
-          <Field className={css.input} id={nameFieldId} name="name" />
-          <ErrorMessage className={css.error} name="name" as="span" />
+            <label className={css.label} htmlFor={nameFieldId}>
+              Name
+            </label>
+            <Field className={css.input} id={nameFieldId} name="name" />
+            <ErrorMessage className={css.error} name="name" as="span" />
           </div>
           <div className={css.inputContainer}>
-          <label className={css.label} htmlFor={numberFieldId}>
-            Number
-          </label>
-          <Field className={css.input} id={numberFieldId} name="number" />
-          <ErrorMessage className={css.error} name="number" as="span" />
+            <label className={css.label} htmlFor={numberFieldId}>
+              Number
+            </label>
+            <Field className={css.input} id={numberFieldId} name="number" />
+            <ErrorMessage className={css.error} name="number" as="span" />
           </div>
-          <button className={css.btn} type="submit">Add contact</button>
+          <button className={css.btn} type="submit">
+            Add contact
+          </button>
         </Form>
       </Formik>
     </>
